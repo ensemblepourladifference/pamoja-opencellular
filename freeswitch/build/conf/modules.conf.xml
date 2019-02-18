@@ -45,12 +45,12 @@
     <!-- <load module="mod_unicall"/> -->
     <!-- <load module="mod_skinny"/> -->
     <!-- <load module="mod_khomp"/>   -->
-    <load module="mod_rtc"/>
+    <!-- <load module="mod_rtc"/> -->
     <!-- <load module="mod_rtmp"/>   -->
-    <load module="mod_verto"/>
+    <!-- <load module="mod_verto"/> -->
 
     <!-- Applications -->
-    <load module="mod_signalwire"/>
+    <!-- <load module="mod_signalwire"/> -->
     <load module="mod_commands"/>
     <load module="mod_conference"/>
     <load module="mod_curl"/>
@@ -92,8 +92,8 @@
     <!-- Codec Interfaces -->
     <!-- <load module="mod_spandsp"/> -->
     <!-- <load module="mod_g723_1"/> -->
-    <!-- <load module="mod_g729"/> -->
-    <!-- <load module="mod_amr"/> -->
+    <load module="mod_g729"/>
+    <load module="mod_amr"/>
     <!--<load module="mod_ilbc"/>-->
     <!--<load module="mod_h26x"/>-->
     <!-- <load module="mod_b64"/> -->
