@@ -7,21 +7,21 @@ This repo contains the services and dependencies for the OpenCellular deployment
 1. Clone the repo
 2. Run `yarn` to install deps
 
-# on server, create required directories
-mkdir -p /data/mongo
-mkdir -p /data/traefik
-touch /data/traefik/acme.json
-chmod 600 /data/traefik/acme.json
-touch /data/traefik/traefik.log
-chmod 600 /data/traefik/traefik.log
+## On server, create required directories
+1. ```mkdir -p /data/mongo```
+2. ```mkdir -p /data/traefik```
+3. ```touch /data/traefik/acme.json```
+4. ```chmod 600 /data/traefik/acme.json```
+5. ```touch /data/traefik/traefik.log```
+6. ```chmod 600 /data/traefik/traefik.log```
 
-# on server, install traefik dependencies and docker - dont forget to docker login
-sudo apt-get install apache2-utils
+## On server, install traefik dependencies and docker - Don't forget to docker login
+```sudo apt-get install apache2-utils```
 
-# add users to server docker
-sudo gpasswd -a $USER docker
+## Add users to server docker
+```sudo gpasswd -a $USER docker```
 
-# to deploy
-yarn compose:push
-yarn deploy user server-ip
+## To deploy
+1. ```yarn compose:push```
+2. ```yarn deploy $user $server-ip```
 
