@@ -23,5 +23,5 @@ sudo gpasswd -a $USER docker
 
 # to deploy
 yarn compose:push
-yarn deploy <user> <server-ip>
+yarn deploy user server-ip
 
