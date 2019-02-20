@@ -1,0 +1,9 @@
+version: '3.0'
+
+services:
+  salama:
+    image: ensemblepourladifference/salama:latest
+    build: packages/salama
+    restart: unless-stopped
+    environment:
+      - MONGO_URL=mongodb://mongo/user-mgnt

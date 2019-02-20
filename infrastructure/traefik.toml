@@ -1,0 +1,19 @@
+logLevel = "INFO"
+defaultEntryPoints = ["http"]
+
+[traefikLog]
+  filePath = "/data/traefik/traefik.log"
+  format   = "json"
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+[api]
+
+[ping]
+
+[docker]
+domain = "docker.localhost"
+watch = true
+exposedByDefault = false

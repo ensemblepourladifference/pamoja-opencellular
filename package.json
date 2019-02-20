@@ -1,0 +1,41 @@
+{
+  "name": "pamoja-opencellular",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ensemblepourladifference/pamoja-opencellular.git",
+  "private": true,
+  "license": "UNLICENSED",
+  "workspaces": [
+    "packages/*"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lerna run --parallel precommit"
+    }
+  },
+  "scripts": {
+    "start": "lerna run --parallel start",
+    "dev": "concurrently \"yarn run start\" \"yarn run compose\"",
+    "compose": "yarn run compose:build && yarn run compose:up",
+    "compose:up": "docker-compose -p pamoja -f docker-compose.deps.yml -f docker-compose.dev.yml up",
+    "compose:down": "docker-compose -p pamoja -f docker-compose.deps.yml -f docker-compose.dev.yml down",
+    "compose:build": "docker-compose -f docker-compose.deps.yml -f docker-compose.dev.yml build",
+    "compose:all": "yarn run compose:all:build && yarn run compose:all:up",
+    "compose:all:up": "docker-compose -p pamoja -f docker-compose.deps.yml -f docker-compose.yml up",
+    "compose:all:down": "docker-compose -p pamoja -f docker-compose.deps.yml -f docker-compose.yml down",
+    "compose:all:build": "docker-compose -f docker-compose.deps.yml -f docker-compose.yml build",
+    "compose:push": "docker-compose build && docker-compose push",
+    "deploy": "./deploy.sh"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.0",
+    "concurrently": "^3.5.1",
+    "husky": "1.0.0-rc.13",
+    "lerna": "^2.11.0",
+    "lint-staged": "^7.1.0",
+    "prettier": "^1.15.2"
+  },
+  "dependencies": {
+    "opener": "^1.5.1"
+  }
+}

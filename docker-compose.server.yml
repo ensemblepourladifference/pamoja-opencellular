@@ -1,0 +1,47 @@
+version: '3.0'
+
+services:
+  # configure reverse proxy for public endpoints
+  traefik:
+    image: traefik
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8090:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /data/traefik/acme.json:/acme.json
+      - /tmp/compose/infrastructure/traefik.toml:/traefik.toml
+
+  freeswitch:
+    image: ensemblepourladifference/freeswitch:latest
+    build:
+      context: .
+      dockerfile: /tmp/compose/Dockerfile-freeswitch
+    restart: unless-stopped
+    ports:
+      - '8021:8021/tcp'
+      - '5060/tcp:5060/tcp'
+      - '5060/udp:5060/udp'
+      - '5080/tcp:5080/tcp'
+      - '5080/udp:5080/udp'
+      - '5061/tcp:5061/tcp'
+      - '5061/udp:5061/udp'
+      - '5081:5081/udp'
+      - '7443:7443/tcp'
+      - '5070:5070/udp'
+      - '64535-65535:64535-65535/udp'
+      - '16384-32768:16384-32768/udp'
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.frontend.rule=PathPrefixStrip:/freeswitch'
+        - 'traefik.docker.network=pamoja_default'
+
+  salama:
+    deploy:
+      labels:
+        - 'traefik.enable=true'
+        - 'traefik.frontend.rule=PathPrefixStrip:/salama'
+        - 'traefik.port=4040'
+        - 'traefik.docker.network=pamoja_default'

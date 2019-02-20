@@ -1,6 +1,7 @@
 FROM debian:stretch AS build
+WORKDIR /usr/src/app
 
-COPY 	fsstretch-archive-keyring.asc /tmp/fsstretch-archive-keyring.asc 
+COPY 	./freeswitch/fsstretch-archive-keyring.asc /tmp/fsstretch-archive-keyring.asc
 RUN	apt-get update && \
 	apt-get install -y --no-install-recommends \
 		python3-dev \
@@ -15,8 +16,8 @@ RUN	apt-get update && \
 	apt-get build-dep -y --no-install-recommends freeswitch && \
 	apt-get clean
 
-COPY	python3.patch /tmp
-COPY	smpp.patch /tmp
+COPY	./freeswitch/python3.patch /tmp
+COPY	./freeswitch/smpp.patch /tmp
 RUN	mkdir -p /usr/src/ && \
 	cd /usr/src && \
 	git clone https://freeswitch.org/stash/scm/fs/freeswitch.git -bv1.8 freeswitch && \
@@ -29,7 +30,7 @@ RUN	mkdir -p /usr/src/ && \
 RUN	echo "exit 0" > /usr/local/bin/lsb_release && \
 	chmod +x /usr/local/bin/lsb_release
 
-COPY modules.conf /tmp/modules.conf
+COPY ./freeswitch/modules.conf /tmp/modules.conf
 RUN	cd /usr/src/freeswitch && \
 	./bootstrap.sh -j && \
 	cp /tmp/modules.conf . && \
@@ -54,7 +55,7 @@ COPY --from=build /usr/lib/python3/dist-packages /usr/lib/python3/dist-packages
 # make the "en_US.UTF-8" locale so freeswitch will be utf-8 enabled by default
 ENV	LANG en_US.utf8
 
-COPY 	fsstretch-archive-keyring.asc /tmp/fsstretch-archive-keyring.asc
+COPY 	./freeswitch/fsstretch-archive-keyring.asc /tmp/fsstretch-archive-keyring.asc
 RUN	apt-get update && \
 	apt-get install -y --no-install-recommends \
 		gosu \
@@ -75,7 +76,7 @@ RUN	apt-get update && \
 		libpq5 \
 		libtinfo5 \
 		libswscale4 \
-		libuuid1\ 
+		libuuid1\
 		libsndfile1 \
 		libcurl3 \
 		locales \
@@ -94,11 +95,11 @@ RUN	apt-get update && \
 	groupadd -r freeswitch --gid=999 && useradd -r -g freeswitch --uid=999 freeswitch
 
 # Add service entrypoint
-COPY	docker-entrypoint.sh /
+COPY	./freeswitch/docker-entrypoint.sh /
 # Limits Configuration
-COPY    build/freeswitch.limits.conf /etc/security/limits.d/
+COPY    ./freeswitch/build/freeswitch.limits.conf /etc/security/limits.d/
 # Copy custom configurations
-COPY 	build/conf/modules.conf.xml /usr/local/freeswitch/conf/autoload_configs/
+COPY 	./freeswitch/build/conf/modules.conf.xml /usr/local/freeswitch/conf/autoload_configs/
 
 ## Ports
 # Open the container up to the world.
