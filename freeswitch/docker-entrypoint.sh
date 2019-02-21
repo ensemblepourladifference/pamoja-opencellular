@@ -5,6 +5,8 @@ set -e
 # https://github.com/docker-library/postgres/blob/master/9.4/docker-entrypoint.sh
 # https://github.com/kovalyshyn/docker-freeswitch/blob/vanilla/docker-entrypoint.sh
 
+export PATH=/usr/local/freeswitch/bin/:$PATH
+
 if [ "$1" = 'freeswitch' ]; then
 
     chown -R freeswitch:freeswitch /usr/local/freeswitch/

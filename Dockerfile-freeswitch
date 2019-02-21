@@ -27,8 +27,8 @@ RUN	mkdir -p /usr/src/ && \
 	git am /tmp/python3.patch && \
 	git am /tmp/smpp.patch
 
-RUN	echo "exit 0" > /usr/local/bin/lsb_release && \
-	chmod +x /usr/local/bin/lsb_release
+#RUN	echo "exit 0" > /usr/local/bin/lsb_release && \
+#	chmod +x /usr/local/bin/lsb_release
 
 COPY ./freeswitch/modules.conf /tmp/modules.conf
 RUN	cd /usr/src/freeswitch && \
@@ -100,6 +100,7 @@ COPY	./freeswitch/docker-entrypoint.sh /
 COPY    ./freeswitch/build/freeswitch.limits.conf /etc/security/limits.d/
 # Copy custom configurations
 COPY 	./freeswitch/build/conf/modules.conf.xml /usr/local/freeswitch/conf/autoload_configs/
+COPY 	./freeswitch/build/conf/event_socket.conf.xml /usr/local/freeswitch/conf/autoload_configs/
 
 ## Ports
 # Open the container up to the world.
@@ -122,7 +123,7 @@ VOLUME ["/tmp"]
 # Healthcheck to make sure the service is running
 SHELL       ["/bin/bash"]
 HEALTHCHECK --interval=15s --timeout=5s \
-    CMD  fs_cli -x status | grep -q ^UP || exit 1
+    CMD  /usr/local/freeswitch/bin/fs_cli -x status | grep -q ^UP || exit 1
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["freeswitch"]
