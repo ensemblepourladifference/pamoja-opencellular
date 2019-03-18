@@ -1,19 +1,25 @@
 logLevel = "INFO"
 defaultEntryPoints = ["http"]
 
-[traefikLog]
-  filePath = "/data/traefik/traefik.log"
-  format   = "json"
+[web]
+address = ":8080"
+  [web.auth.basic]
+  users = ["admin:$apr1$gyUOdoQS$LlG5W7N.v46wo1rKDnWWw0"]
 
 [entryPoints]
   [entryPoints.http]
   address = ":80"
+
+[traefikLog]
+  filePath = "/data/traefik/traefik.log"
+  format   = "json"
 
 [api]
 
 [ping]
 
 [docker]
-domain = "docker.localhost"
-watch = true
-exposedByDefault = false
+  domain = "pamoja.lan"
+  watch = true
+  exposedByDefault = false
+
