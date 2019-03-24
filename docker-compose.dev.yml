@@ -5,8 +5,7 @@ services:
   freeswitch:
     image: ensemblepourladifference/freeswitch:latest
     build:
-      context: .
-      dockerfile: ./Dockerfile-freeswitch
+      context: packages/freeswitch
     restart: unless-stopped
 
   mongo:
