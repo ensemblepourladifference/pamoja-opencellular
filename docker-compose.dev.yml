@@ -13,3 +13,27 @@ services:
       - "27017:27017"
     volumes:
       - './data/mongo:/data/db'
+  osmo-msc:
+    image: ensemblepourladifference/osmo-msc:latest
+    build:
+      context: packages/osmo-msc-latest
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+  osmo-mgw:
+    image: ensemblepourladifference/osmo-mgw:latest
+    build:
+      context: packages/osmo-mgw-latest
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+  osmo-hlr:
+    image: ensemblepourladifference/osmo-hlr:latest
+    build:
+      context: packages/osmo-hlr-latest
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+  osmo-stp:
+    image: ensemblepourladifference/osmo-stp:latest
+    build:
+      context: packages/osmo-stp-latest
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
