@@ -36,11 +36,6 @@ services:
       - "5070:5070/udp"
       - "64535-65535:64535-65535/udp"
       - "16384-32768:16384-32768/udp"
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: "Host:freeswitch.pamoja.lan"
-      traefik.docker.network: "pamoja_default"
-
   salama:
     image: ensemblepourladifference/salama:latest
     build: packages/salama
