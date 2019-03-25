@@ -44,6 +44,12 @@ services:
       traefik.frontend.rule: "Host:salama.pamoja.lan"
       traefik.port: "4040"
       traefik.docker.network: "pamoja_default"
+  osmo-bsc:
+    image: ensemblepourladifference/osmo-bsc:latest
+    build:
+      context: packages/osmo-bsc-latest
+    network_mode: "host"
+    restart: unless-stopped
   osmo-msc:
     image: ensemblepourladifference/osmo-msc:latest
     build:
