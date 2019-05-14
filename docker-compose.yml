@@ -11,23 +11,23 @@ services:
     image: ensemblepourladifference/osmo-msc:latest
     build:
       context: packages/osmo-msc-latest
-    network_mode: "host"
+    network_mode: 'host'
     restart: unless-stopped
   osmo-mgw:
     image: ensemblepourladifference/osmo-mgw:latest
     build:
       context: packages/osmo-mgw-latest
-    network_mode: "host"
+    network_mode: 'host'
     restart: unless-stopped
   osmo-hlr:
     image: ensemblepourladifference/osmo-hlr:latest
     build:
       context: packages/osmo-hlr-latest
-    network_mode: "host"
+    network_mode: 'host'
     restart: unless-stopped
   osmo-stp:
     image: ensemblepourladifference/osmo-stp:latest
     build:
       context: packages/osmo-stp-latest
-    network_mode: "host"
+    network_mode: 'host'
     restart: unless-stopped

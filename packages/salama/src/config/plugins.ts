@@ -1,4 +1,4 @@
-import * as Good from "good";
+import * as Good from 'good'
 
 export default function getPlugins() {
   const plugins: any[] = [
@@ -11,26 +11,26 @@ export default function getPlugins() {
         reporters: {
           console: [
             {
-              module: "good-squeeze",
-              name: "Squeeze",
+              module: 'good-squeeze',
+              name: 'Squeeze',
               args: [
                 {
-                  log: "*",
-                  response: "*",
-                  request: "*",
-                  error: "*"
+                  log: '*',
+                  response: '*',
+                  request: '*',
+                  error: '*'
                 }
               ]
             },
             {
-              module: "good-console"
+              module: 'good-console'
             },
-            "stdout"
+            'stdout'
           ]
         }
       }
     }
-  ];
+  ]
 
-  return plugins;
+  return plugins
 }

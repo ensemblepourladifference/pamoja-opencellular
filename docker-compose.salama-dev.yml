@@ -1,0 +1,15 @@
+version: '3.0'
+
+# Expose ports locally for dev
+services:
+  freeswitch:
+    image: ensemblepourladifference/freeswitch:latest
+    build:
+      context: packages/freeswitch
+    restart: unless-stopped
+
+  mongo:
+    ports:
+      - '27017:27017'
+    volumes:
+      - './data/mongo:/data/db'
