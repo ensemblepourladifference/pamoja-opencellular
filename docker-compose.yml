@@ -1,12 +1,21 @@
 version: '3.0'
 
 services:
-  salama:
-    image: ensemblepourladifference/salama:latest
-    build: packages/salama
+  salama-mgnt:
+    image: ensemblepourladifference/salama-mgnt:latest
+    build: packages/salama-mgnt
     restart: unless-stopped
     environment:
-      - MONGO_URL=mongodb://mongo/user-mgnt
+      - MONGO_URL=mongodb://mongo/salama-mgnt
+  salama-freeswitch-controller:
+    build: packages/salama-freeswitch-controller
+    restart: unless-stopped
+    network_mode: host
+    container_name: salama-freeswitch-controller
+    environment:
+      - FREESWITCH_IP=127.0.0.1
+      - FREESWITCH_PORT=8021
+      - FREESWITCH_PASSWORD=ClueCon
   osmo-msc:
     image: ensemblepourladifference/osmo-msc:latest
     build:

@@ -22,7 +22,7 @@ const connect = async (): Promise<void> => {
     logger.info(
       'Waiting for MongoDB.  If building all dependencies this can take some time.'
     )
-    await wait(1000)
+    await wait(10000)
     return connect()
   }
 }

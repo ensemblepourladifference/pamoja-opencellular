@@ -4,11 +4,11 @@ WORKDIR /usr/src/app
 COPY 	./fsstretch-archive-keyring.asc /tmp/fsstretch-archive-keyring.asc
 RUN	apt-get update && \
 	apt-get install -y --no-install-recommends \
-		python3-dev \
-		devscripts \
-		cowbuilder \
-		libsmpp34-dev \
-		gnupg && \
+	python3-dev \
+	devscripts \
+	cowbuilder \
+	libsmpp34-dev \
+	gnupg && \
 	apt-key add /tmp/fsstretch-archive-keyring.asc && \
 	echo "deb http://files.freeswitch.org/repo/deb/freeswitch-1.8/ stretch main" > /etc/apt/sources.list.d/freeswitch.list && \
 	echo "deb-src http://files.freeswitch.org/repo/deb/freeswitch-1.8/ stretch main" >> /etc/apt/sources.list.d/freeswitch.list && \
@@ -32,10 +32,13 @@ RUN	cd /usr/src/freeswitch && \
 	./bootstrap.sh -j && \
 	cp /tmp/modules.conf . && \
 	./configure \
-		--with-python=`which python3` \
-		--with-prefix=/usr/local/freeswitch \
-		--enable-optimization && \
+	--with-python=`which python3` \
+	--with-prefix=/usr/local/freeswitch \
+	--enable-optimization && \
 	make -j`nproc` && \
+	make sounds-install moh-install && \
+	make hd-sounds-install hd-moh-install && \
+	make cd-sounds-install cd-moh-install && \
 	make install hd-sounds-fr-install && \
 	cd libs/esl && \
 	make pymod && \
@@ -51,36 +54,36 @@ ENV	LANG en_US.utf8
 COPY 	./fsstretch-archive-keyring.asc /tmp/fsstretch-archive-keyring.asc
 RUN	apt-get update && \
 	apt-get install -y --no-install-recommends \
-		gosu \
-		gnupg \
-		libsmpp34-0 \
-		libpython3.5 \
-		libsqlite3-0 \
-		libpng16-16 \
-		libspeexdsp1 \
-		libspeex1 \
-		libfreetype6 \
-		libncurses5 \
-		libssl1.0.2 \
-		libodbc1 \
-		libbsd0 \
-		libc6 \
-		libedit2 \
-		libpq5 \
-		libtinfo5 \
-		libswscale4 \
-		libuuid1\
-		libsndfile1 \
-		libcurl3 \
-		locales \
-		libopencore-amrnb0 && \
+	gosu \
+	gnupg \
+	libsmpp34-0 \
+	libpython3.5 \
+	libsqlite3-0 \
+	libpng16-16 \
+	libspeexdsp1 \
+	libspeex1 \
+	libfreetype6 \
+	libncurses5 \
+	libssl1.0.2 \
+	libodbc1 \
+	libbsd0 \
+	libc6 \
+	libedit2 \
+	libpq5 \
+	libtinfo5 \
+	libswscale4 \
+	libuuid1\
+	libsndfile1 \
+	libcurl3 \
+	locales \
+	libopencore-amrnb0 && \
 	localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
 	apt-key add /tmp/fsstretch-archive-keyring.asc && \
 	echo "deb http://files.freeswitch.org/repo/deb/freeswitch-1.8/ stretch main" > /etc/apt/sources.list.d/freeswitch.list && \
 	echo "deb-src http://files.freeswitch.org/repo/deb/freeswitch-1.8/ stretch main" >> /etc/apt/sources.list.d/freeswitch.list && \
 	apt-get update && \
 	apt-get install -y --no-install-recommends \
-		libg72211 && \
+	libg72211 && \
 	rm -rf /var/lib/apt/lists/* && \
 	apt-get remove -y gnupg && \
 	apt-get autoremove -y && \
@@ -95,6 +98,17 @@ COPY    ./build/freeswitch.limits.conf /etc/security/limits.d/
 COPY 	./build/conf/modules.conf.xml /usr/local/freeswitch/conf/autoload_configs/
 COPY 	./build/conf/event_socket.conf.xml /usr/local/freeswitch/conf/autoload_configs/
 
+# Copy Salama
+RUN	mkdir /var/salama && \
+	chmod 775 /var/salama
+COPY 	./build/conf/dialplan/salama/333_manager.xml /usr/local/freeswitch/conf/dialplan/default/333_manager.xml
+RUN mkdir /usr/local/freeswitch/sounds/fr/ca/june/salama
+COPY  	./build/lang/fr/salama/sounds /usr/local/freeswitch/sounds/fr/ca/june/salama
+COPY  	./build/conf/autoload_configs/acl.conf.xml /usr/local/freeswitch/conf/autoload_configs/
+# /usr/local/freeswitch/conf/ivr_menus
+# /usr/local/freeswitch/sounds/fr/ca/june
+# /usr/local/freeswitch/scripts
+# /usr/local/freeswitch/conf/freeswitch.xml / vars.xml
 ## Ports
 # Open the container up to the world.
 ### 8021 fs_cli, 5060 5061 5080 5081 sip and sips, 64535-65535 rtp
@@ -119,7 +133,7 @@ ENV	PATH "$PATH:/usr/local/freeswitch/bin/"
 # Healthcheck to make sure the service is running
 SHELL       ["/bin/bash"]
 HEALTHCHECK --interval=15s --timeout=5s \
-    CMD  /usr/local/freeswitch/bin/fs_cli -x status | grep -q ^UP || exit 1
+	CMD  /usr/local/freeswitch/bin/fs_cli -x status | grep -q ^UP || exit 1
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["freeswitch"]

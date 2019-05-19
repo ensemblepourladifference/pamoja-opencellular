@@ -22,6 +22,7 @@ services:
     image: ensemblepourladifference/freeswitch:latest
     build:
       context: packages/freeswitch
+    network_mode: 'host'
     restart: unless-stopped
     ports:
       - '8021:8021/tcp'
@@ -31,8 +32,10 @@ services:
       - '5080:5080/udp'
       - '5061:5061/tcp'
       - '5061:5061/udp'
+      - '5081:5081/tcp'
       - '5081:5081/udp'
       - '7443:7443/tcp'
+      - '5070:5070/tcp'
       - '5070:5070/udp'
       - '64535-65535:64535-65535/udp'
       - '16384-32768:16384-32768/udp'
@@ -41,9 +44,9 @@ services:
       traefik.frontend.rule: 'Host:freeswitch.pamoja.lan'
       traefik.docker.network: 'pamoja_default'
 
-  salama:
-    image: ensemblepourladifference/salama:latest
-    build: packages/salama
+  salama-mgnt:
+    image: ensemblepourladifference/salama-mgnt:latest
+    build: packages/salama-mgnt
     labels:
       traefik.enable: 'true'
       traefik.frontend.rule: 'Host:salama.pamoja.lan'
