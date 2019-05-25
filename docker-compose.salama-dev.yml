@@ -25,12 +25,3 @@ services:
       - '27017:27017'
     volumes:
       - './data/mongo:/data/db'
-  salama-freeswitch-controller:
-    build: packages/salama-freeswitch-controller
-    restart: unless-stopped
-    network_mode: host
-    container_name: salama-freeswitch-controller
-    environment:
-      - FREESWITCH_IP=127.0.0.1
-      - FREESWITCH_PORT=8021
-      - FREESWITCH_PASSWORD=ClueCon

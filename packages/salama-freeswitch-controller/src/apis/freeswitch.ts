@@ -1,13 +1,8 @@
-/**
- * FreeSWITCH API.
- */
+import * as ESL from 'modesl'
+import { logger } from 'src/logger'
+import { config } from 'src/constants'
 
-const ESL = require('modesl')
-const Log = require('winston')
-
-const FreeswitchConfig = require('../config/config').getConfig('freeswitch')
-
-const Event = {
+export const Event = {
   Connection: {
     READY: 'esl::ready',
     CLOSED: 'esl::end',
@@ -15,53 +10,50 @@ const Event = {
   },
   RECEIVED: 'esl::event::*::*'
 }
-const ALL_EVENTS = 'all'
-const RESPONSE_SUCCESS = '+OK'
+export const ALL_EVENTS = 'all'
+export const RESPONSE_SUCCESS = '+OK'
 
-let connection = null
+let connection: any = null
 
 /**
  * Connect to Event Socket or return the existing connection.
  *
  * @return Promise contanining the current ESL connection.
  */
-const connect = () =>
+export const connect = () =>
   new Promise((resolve, reject) => {
     if (connection !== null && connection.connected()) {
       resolve(connection)
     } else {
-      Log.info(
+      logger.info(
         `Opening new FreeSWITCH event socket connection... IP: ${
-          FreeswitchConfig.ip
-        }, PORT: ${FreeswitchConfig.port}, PASSWORD: ${
-          FreeswitchConfig.password
-        }`
+          config.ip
+        }, PORT: ${config.port}, PASSWORD: ${config.password}`
       )
 
       connection = new ESL.Connection(
-        FreeswitchConfig.ip,
-        FreeswitchConfig.port,
-        FreeswitchConfig.password,
-        function() {
-          connection.api('status', function(res) {
-            //res is an esl.Event instance
-            console.log(res.getBody())
+        config.ip,
+        config.port,
+        config.password,
+        () => {
+          connection.api('status', (res: any) => {
+            console.log('Freeswitch status: ', res.getBody())
           })
         }
       )
 
       connection.on(Event.Connection.ERROR, () => {
-        Log.error('Error connecting to FreeSWITCH!')
+        logger.error('Error connecting to FreeSWITCH!')
         reject('Connection error')
       })
 
       connection.on(Event.Connection.CLOSED, () => {
-        Log.error('Connection to FreeSWITCH closed!')
+        logger.error('Connection to FreeSWITCH closed!')
         reject('Connection closed')
       })
 
       connection.on(Event.Connection.READY, () => {
-        Log.info('Connection to FreeSWITCH established!')
+        logger.info('Connection to FreeSWITCH established!')
         resolve(connection)
       })
     }
@@ -74,26 +66,26 @@ const connect = () =>
  *
  * @return The body of the response, or an error.
  */
-const execute = (callerIdNumber, command) =>
+export const execute = (callerIdNumber: string | number, command: any) =>
   new Promise((resolve, reject) => {
-    Log.info(`[${callerIdNumber}] Executing command: ${command}`)
+    logger.info(`[${callerIdNumber}] Executing command: ${command}`)
 
     connect()
-      .then(connection => {
-        connection.bgapi(command, response => {
+      .then((freeswitch: any) => {
+        freeswitch.bgapi(command, (response: any) => {
           const responseBody = response.getBody()
           resolve(responseBody)
         })
       })
       .catch(error => {
-        Log.error(
+        logger.error(
           `[${callerIdNumber}] Error executing command '${command}': ${error.trim()}`
         )
         reject(error)
       })
   })
 
-const isSuccessfulResponse = response => {
+export const isSuccessfulResponse = (response: any) => {
   return response.indexOf(RESPONSE_SUCCESS) === 0
 }
 
@@ -103,17 +95,20 @@ const isSuccessfulResponse = response => {
  *
  * @return The body of the response, or an error.
  */
-const executeWithOkResult = (callerIdNumber, command) =>
+export const executeWithOkResult = (
+  callerIdNumber: string | number,
+  command: any
+) =>
   new Promise((resolve, reject) => {
     execute(callerIdNumber, command)
-      .then(response => {
+      .then((response: any) => {
         if (isSuccessfulResponse(response)) {
-          Log.info(
+          logger.info(
             `[${callerIdNumber}] Command '${command}' executed successfully: ${response.trim()}`
           )
           resolve(response)
         } else {
-          Log.error(
+          logger.error(
             `[${callerIdNumber}] Error executing command '${command}': ${response.trim()}`
           )
           reject(response)
@@ -123,9 +118,3 @@ const executeWithOkResult = (callerIdNumber, command) =>
         reject(error)
       })
   })
-
-exports.ALL_EVENTS = ALL_EVENTS
-exports.Event = Event
-exports.connect = connect
-exports.execute = execute
-exports.executeWithOkResult = executeWithOkResult
