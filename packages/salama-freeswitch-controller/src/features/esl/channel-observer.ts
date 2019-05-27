@@ -18,7 +18,6 @@ import { answer } from 'src/utils/dialplan'
 import { routeChannel } from 'src/features/esl/channel-router'
 
 export async function notify(event: IBuiltEvent) {
-  console.log(event.name)
   switch (event.name) {
     case CHANNEL_CREATE:
       logger.info(`New Channel Create event: ${JSON.stringify(event)}`)

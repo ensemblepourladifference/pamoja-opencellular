@@ -44,36 +44,3 @@ export async function executeDialplan(
       break
   }
 }
-
-/*
-
-<action function="play-file"
-data="ivr/1-1-this-is-salama.wav"/>
-<action function="sleep"
-data="500"/>
-<action function="play-file"
-data="ivr/1-2.wav"/>
-<action function="sleep"
-data="500"/>
-<action function="play-file"
-data="ivr/press.wav"/>
-<action function="sleep"
-data="250"/>
-<action function="play-file"
-data="digits/1.wav"/>
-<action function="sleep"
-data="250"/>
-<action function="play-file"
-data="ivr/1-3a.wav"/>
-<action function="sleep"
-data="500"/>
-<action function="play-file"
-data="ivr/press.wav"/>
-<action function="sleep"
-data="250"/>
-<action function="play-file"
-data="digits/2.wav"/>
-<action function="sleep"
-data="250"/>
-<action function="play-file"
-data="ivr/1-3b.wav"/>*/
