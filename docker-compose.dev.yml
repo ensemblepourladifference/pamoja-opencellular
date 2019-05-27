@@ -51,3 +51,6 @@ services:
       context: packages/osmo-stp-latest
       dockerfile: ./Dockerfile
     restart: unless-stopped
+  redis:
+    ports:
+      - '6379:6379'

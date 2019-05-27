@@ -1,6 +1,11 @@
+import { IEvent } from 'src/apis/freeswitch'
+
 export const CHANNEL_CREATE = 'CHANNEL_CREATE'
 export const CHANNEL_HANGUP = 'CHANNEL_HANGUP'
-const DTMF = 'DTMF'
+export const CHANNEL_ANSWER = 'CHANNEL_ANSWER'
+export const CHANNEL_EXECUTE = 'CHANNEL_EXECUTE'
+export const PLAYBACK_STOP = 'PLAYBACK_STOP'
+export const DTMF = 'DTMF'
 
 interface IFreeswitch {
   hostname: string
@@ -8,7 +13,7 @@ interface IFreeswitch {
   ipV6: string
 }
 
-interface ICaller {
+export interface ICaller {
   callerIdName: string
   callerIdNumber: string
   channelName: string
@@ -78,7 +83,7 @@ interface IChannelHangupEvent extends IGenericEvent {
   hangupCause: string
 }
 
-interface IChannelCreateEvent extends IGenericEvent {
+export interface IChannelCreateEvent extends IGenericEvent {
   channel: IChannel
   freeswitch: IFreeswitch
   answerState: string
@@ -88,7 +93,23 @@ interface IChannelCreateEvent extends IGenericEvent {
   uniqueId: string
 }
 
-interface IDtmfEvent extends IGenericEvent {
+export interface IChannelExecuteEvent extends IGenericEvent {
+  caller: ICaller
+  destinationNumber: string
+  uniqueId: string
+}
+export interface IChannelAnswerEvent extends IGenericEvent {
+  codec: ICodec
+  caller: ICaller
+  uniqueId: string
+}
+
+export interface IPlaybackStopEvent extends IGenericEvent {
+  caller: ICaller
+  uniqueId: string
+}
+
+export interface IDtmfEvent extends IGenericEvent {
   codec: ICodec
   caller: ICaller
   channel: IChannel
@@ -101,7 +122,7 @@ interface IDtmfEvent extends IGenericEvent {
   uniqueId: string
 }
 
-const getFreeswitch = (rawEvent: any): IFreeswitch => {
+const getFreeswitch = (rawEvent: IEvent): IFreeswitch => {
   return {
     hostname: rawEvent.getHeader('FreeSWITCH-Hostname'),
     ipV4: rawEvent.getHeader('FreeSWITCH-IPv4'),
@@ -109,7 +130,7 @@ const getFreeswitch = (rawEvent: any): IFreeswitch => {
   }
 }
 
-const getCaller = (rawEvent: any): ICaller => {
+const getCaller = (rawEvent: IEvent): ICaller => {
   return {
     callerIdName: rawEvent.getHeader('Caller-Caller-ID-Name'),
     callerIdNumber: rawEvent.getHeader('Caller-Caller-ID-Number'),
@@ -127,7 +148,7 @@ const getCaller = (rawEvent: any): ICaller => {
   }
 }
 
-const getChannel = (rawEvent: any): IChannel => {
+const getChannel = (rawEvent: IEvent): IChannel => {
   return {
     name: rawEvent.getHeader('Channel-Name'),
     state: rawEvent.getHeader('Channel-State'),
@@ -135,7 +156,7 @@ const getChannel = (rawEvent: any): IChannel => {
   }
 }
 
-const getCodec = (rawEvent: any): ICodec => {
+const getCodec = (rawEvent: IEvent): ICodec => {
   return {
     channelReadCodecName: rawEvent.getHeader('Channel-Read-Codec-Name'),
     channelReadCodecRate: rawEvent.getHeader('Channel-Read-Codec-Rate'),
@@ -144,7 +165,7 @@ const getCodec = (rawEvent: any): ICodec => {
   }
 }
 
-const getChannelCreate = (rawEvent: any): IChannelCreateEvent => {
+const getChannelCreate = (rawEvent: IEvent): IChannelCreateEvent => {
   const channelCreate = getGeneric(rawEvent) as IChannelCreateEvent
   channelCreate.channel = getChannel(rawEvent)
   channelCreate.freeswitch = getFreeswitch(rawEvent)
@@ -158,7 +179,15 @@ const getChannelCreate = (rawEvent: any): IChannelCreateEvent => {
   return channelCreate
 }
 
-const getChannelHangup = (rawEvent: any): IChannelHangupEvent => {
+const getChannelAnswer = (rawEvent: IEvent): IChannelAnswerEvent => {
+  const channelAnswer = getGeneric(rawEvent) as IChannelAnswerEvent
+  channelAnswer.codec = getCodec(rawEvent)
+  channelAnswer.caller = getCaller(rawEvent)
+  channelAnswer.uniqueId = rawEvent.getHeader('Unique-ID')
+  return channelAnswer
+}
+
+const getChannelHangup = (rawEvent: IEvent): IChannelHangupEvent => {
   const channelHangup = getGeneric(rawEvent) as IChannelHangupEvent
   channelHangup.codec = getCodec(rawEvent)
   channelHangup.caller = getCaller(rawEvent)
@@ -167,7 +196,7 @@ const getChannelHangup = (rawEvent: any): IChannelHangupEvent => {
   return channelHangup
 }
 
-const getDtmf = (rawEvent: any): IDtmfEvent => {
+const getDtmf = (rawEvent: IEvent): IDtmfEvent => {
   const dtmf = getGeneric(rawEvent) as IDtmfEvent
   const caller = getCaller(rawEvent)
   caller.channelAnsweredTime = rawEvent.getHeader(
@@ -191,7 +220,7 @@ const getDtmf = (rawEvent: any): IDtmfEvent => {
   return dtmf
 }
 
-const getGeneric = (rawEvent: any): IGenericEvent => {
+const getGeneric = (rawEvent: IEvent): IGenericEvent => {
   return {
     callingFile: rawEvent.getHeader('Event-Calling-File'),
     callingFunction: rawEvent.getHeader('Event-Calling-Function'),
@@ -205,7 +234,7 @@ const getGeneric = (rawEvent: any): IGenericEvent => {
   }
 }
 
-const getOriginate = (rawEvent: any): IOriginate => {
+const getOriginate = (rawEvent: IEvent): IOriginate => {
   return {
     callerIdName: rawEvent.getHeader('Originatee-Caller-ID-Name'),
     callerIdNumber: rawEvent.getHeader('Originatee-Caller-ID-Number'),
@@ -223,21 +252,47 @@ const getOriginate = (rawEvent: any): IOriginate => {
   }
 }
 
+const getPlaybackStop = (rawEvent: IEvent): IPlaybackStopEvent => {
+  const playbackStop = getGeneric(rawEvent) as IPlaybackStopEvent
+  playbackStop.caller = getCaller(rawEvent)
+  playbackStop.uniqueId = rawEvent.getHeader('Caller-Unique-ID')
+  return playbackStop
+}
+
+const getExecute = (rawEvent: IEvent): IChannelExecuteEvent => {
+  const channelExecute = getGeneric(rawEvent) as IChannelExecuteEvent
+  channelExecute.caller = getCaller(rawEvent)
+  channelExecute.destinationNumber = rawEvent.getHeader(
+    'Caller-Destination-Number'
+  )
+  channelExecute.uniqueId = rawEvent.getHeader('Caller-Unique-ID')
+  return channelExecute
+}
+
 export type IBuiltEvent =
   | IGenericEvent
   | IDtmfEvent
   | IChannelCreateEvent
+  | IChannelAnswerEvent
   | IChannelHangupEvent
+  | IChannelExecuteEvent
+  | IPlaybackStopEvent
 
-export const buildEvent = (rawEvent: any): IBuiltEvent => {
+export const buildEvent = (rawEvent: IEvent): IBuiltEvent => {
   const eventName = rawEvent.getHeader('Event-Name')
   switch (eventName) {
     case CHANNEL_CREATE:
       return getChannelCreate(rawEvent)
     case CHANNEL_HANGUP:
       return getChannelHangup(rawEvent)
+    case CHANNEL_ANSWER:
+      return getChannelAnswer(rawEvent)
+    case CHANNEL_EXECUTE:
+      return getExecute(rawEvent)
     case DTMF:
       return getDtmf(rawEvent)
+    case PLAYBACK_STOP:
+      return getPlaybackStop(rawEvent)
     default:
       return getGeneric(rawEvent)
   }

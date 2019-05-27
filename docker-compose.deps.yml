@@ -1,4 +1,4 @@
-version: "3.0"
+version: '3.0'
 
 services:
   mongo:
@@ -8,3 +8,6 @@ services:
       driver: none
     volumes:
       - '/data/mongo:/data/db'
+  redis:
+    image: redis:5
+    restart: unless-stopped

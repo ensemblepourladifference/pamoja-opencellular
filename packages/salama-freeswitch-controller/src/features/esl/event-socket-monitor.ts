@@ -9,7 +9,6 @@ export const startJob = () => {
   FreeswitchApi.connect()
     .then((connection: any) => {
       connection.subscribe(FreeswitchApi.ALL_EVENTS)
-
       connection.on(FreeswitchApi.Event.RECEIVED, (rawEvent: any) => {
         const channelEvent: IBuiltEvent = buildEvent(rawEvent)
 

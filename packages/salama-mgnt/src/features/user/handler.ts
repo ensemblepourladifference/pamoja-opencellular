@@ -14,6 +14,15 @@ interface IUserResponse {
   user: IUserModel
 }
 
+interface INoUserResponse {
+  noUser: boolean
+}
+
+interface INoUserDialplansResponse {
+  user: IUserModel
+  noDialplans: boolean
+}
+
 interface IUser {
   email: string
   username: string
@@ -43,13 +52,21 @@ export async function getUserHandler(
   h: Hapi.ResponseToolkit
 ) {
   const extension = request.params.extension
-  const user: IUserModel | null = await User.findById(extension)
+  const user: IUserModel | null = await User.findOne({ extension })
   if (!user) {
-    throw internal('User does not exist')
+    const noUserRespomse: INoUserResponse = { noUser: true }
+    return noUserRespomse
   }
   const dialplans: IDialplanModel[] | null = await Dialplan.find({
     userId: user.id
   })
+  if (!dialplans) {
+    const noUserDialplansResponse: INoUserDialplansResponse = {
+      user,
+      noDialplans: true
+    }
+    return noUserDialplansResponse
+  }
 
   const response: IGetUserResponse = { user, dialplans }
 

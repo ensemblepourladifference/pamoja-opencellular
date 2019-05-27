@@ -1,6 +1,72 @@
 import * as ESL from 'modesl'
 import { logger } from 'src/logger'
 import { config } from 'src/constants'
+import * as Freeswitch from './freeswitch'
+import EventEmitter = NodeJS.EventEmitter
+
+export interface IConnection extends EventEmitter {
+  api(command: any, args: string[], cb?: (args: any) => void): void
+  auth(cb: () => void): void
+  bgapi(
+    command: any,
+    args: string[],
+    jobid?: any,
+    cb?: (args: any) => void
+  ): void
+  connected(): any
+  disconnect(): void
+  events(
+    type: 'json' | 'plain' | 'xml',
+    events: string,
+    cb?: (args: any) => void
+  ): void
+  execute(app: any, arg?: string, uuid?: string, cb?: (args: any) => void): any
+  executeAsync(
+    app: any,
+    arg?: string,
+    uuid?: string,
+    cb?: (args: any) => void
+  ): any
+  filter(header: any, value: any, cb?: (args: any) => void): void
+  filterDelete(header: any, value: any, cb?: (args: any) => void): void
+  getInfo(): any
+  message(options: any, cb?: (args: any) => void): void
+  originate(options: any, cb?: (args: any) => void): void
+  recvEvent(cb?: (args: any) => void): void
+  recvEventTimed(ms: any, cb?: (args: any) => void): void
+  send(command: any, args: any): void
+  sendEvent(event: any, cb?: (args: any) => void): void
+  sendRecv(command: any, args: any, cb?: (args: any) => void): void
+  setAsyncExecute(value: any): void
+  setEventLock(value: any): void
+  show(item: any, format: any, cb?: (args: any) => void): void
+  socketDescriptor(): any
+  subscribe(events: any, cb?: (args: any) => void): void
+}
+
+export interface IHeader {
+  name: string
+  value: string
+}
+
+export interface IEvent {
+  PRIORITY: {
+    HIGH: string
+    LOW: string
+    NORMAL: string
+  }
+  headers: IHeader[]
+  addBody(value: any): any
+  addHeader(name: any, value: any): any
+  delHeader(name: any): any
+  firstHeader(): any
+  getBody(): any
+  getHeader(name: any): string
+  getType(): any
+  nextHeader(): any
+  serialize(format: any): any
+  setPriority(priority: any): void
+}
 
 export const Event = {
   Connection: {
@@ -13,7 +79,7 @@ export const Event = {
 export const ALL_EVENTS = 'all'
 export const RESPONSE_SUCCESS = '+OK'
 
-let connection: any = null
+let connection: Freeswitch.IConnection
 
 /**
  * Connect to Event Socket or return the existing connection.
@@ -22,7 +88,7 @@ let connection: any = null
  */
 export const connect = () =>
   new Promise((resolve, reject) => {
-    if (connection !== null && connection.connected()) {
+    if (connection !== undefined && connection.connected()) {
       resolve(connection)
     } else {
       logger.info(
@@ -36,7 +102,7 @@ export const connect = () =>
         config.port,
         config.password,
         () => {
-          connection.api('status', (res: any) => {
+          connection.api('status', [], (res: any) => {
             console.log('Freeswitch status: ', res.getBody())
           })
         }
@@ -66,21 +132,19 @@ export const connect = () =>
  *
  * @return The body of the response, or an error.
  */
-export const execute = (callerIdNumber: string | number, command: any) =>
+export const execute = (command: string, args?: string[]) =>
   new Promise((resolve, reject) => {
-    logger.info(`[${callerIdNumber}] Executing command: ${command}`)
+    logger.info(`Executing command: ${command}`)
 
     connect()
-      .then((freeswitch: any) => {
-        freeswitch.bgapi(command, (response: any) => {
+      .then((freeswitch: Freeswitch.IConnection) => {
+        freeswitch.bgapi(command, [], (response: any) => {
           const responseBody = response.getBody()
           resolve(responseBody)
         })
       })
       .catch(error => {
-        logger.error(
-          `[${callerIdNumber}] Error executing command '${command}': ${error.trim()}`
-        )
+        logger.error(`Error executing command '${command}': ${error.trim()}`)
         reject(error)
       })
   })
@@ -95,21 +159,18 @@ export const isSuccessfulResponse = (response: any) => {
  *
  * @return The body of the response, or an error.
  */
-export const executeWithOkResult = (
-  callerIdNumber: string | number,
-  command: any
-) =>
+export const executeWithOkResult = (command: any) =>
   new Promise((resolve, reject) => {
-    execute(callerIdNumber, command)
+    execute(command)
       .then((response: any) => {
         if (isSuccessfulResponse(response)) {
           logger.info(
-            `[${callerIdNumber}] Command '${command}' executed successfully: ${response.trim()}`
+            `Command '${command}' executed successfully: ${response.trim()}`
           )
           resolve(response)
         } else {
           logger.error(
-            `[${callerIdNumber}] Error executing command '${command}': ${response.trim()}`
+            `Error executing command '${command}': ${response.trim()}`
           )
           reject(response)
         }

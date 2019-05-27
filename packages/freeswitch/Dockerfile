@@ -36,10 +36,8 @@ RUN	cd /usr/src/freeswitch && \
 	--with-prefix=/usr/local/freeswitch \
 	--enable-optimization && \
 	make -j`nproc` && \
-	make sounds-install moh-install && \
-	make hd-sounds-install hd-moh-install && \
-	make cd-sounds-install cd-moh-install && \
-	make install hd-sounds-fr-install && \
+	make && make install && \
+	make all cd-sounds-install moh-install hd-moh-install cd-moh-install hd-sounds-fr-install hd-sounds-install && \
 	cd libs/esl && \
 	make pymod && \
 	make pymod-install
@@ -95,15 +93,16 @@ COPY	./docker-entrypoint.sh /
 # Limits Configuration
 COPY    ./build/freeswitch.limits.conf /etc/security/limits.d/
 # Copy custom configurations
-COPY 	./build/conf/modules.conf.xml /usr/local/freeswitch/conf/autoload_configs/
-COPY 	./build/conf/event_socket.conf.xml /usr/local/freeswitch/conf/autoload_configs/
+COPY 	./build/conf/autoload_configs/modules.conf.xml /usr/local/freeswitch/conf/autoload_configs/
+COPY 	./build/conf/autoload_configs/event_socket.conf.xml /usr/local/freeswitch/conf/autoload_configs/
+COPY 	./build/conf/sip_profiles/internal.xml /usr/local/freeswitch/conf/sip_profiles/
 
 # Copy Salama
 RUN	mkdir /var/salama && \
 	chmod 775 /var/salama
-COPY 	./build/conf/dialplan/salama/333_manager.xml /usr/local/freeswitch/conf/dialplan/default/333_manager.xml
 RUN mkdir /usr/local/freeswitch/sounds/fr/ca/june/salama
 COPY  	./build/lang/fr/salama/sounds /usr/local/freeswitch/sounds/fr/ca/june/salama
+COPY  	./build/lang/en/salama/sounds /usr/local/freeswitch/sounds/en/us/callie/salama
 COPY  	./build/conf/autoload_configs/acl.conf.xml /usr/local/freeswitch/conf/autoload_configs/
 # /usr/local/freeswitch/conf/ivr_menus
 # /usr/local/freeswitch/sounds/fr/ca/june
