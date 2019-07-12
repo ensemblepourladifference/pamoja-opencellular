@@ -44,33 +44,54 @@ services:
       traefik.frontend.rule: "Host:salama.pamoja.lan"
       traefik.port: "4040"
       traefik.docker.network: "pamoja_default"
-  osmo-bsc:
-    image: ensemblepourladifference/osmo-bsc:latest
-    build:
-      context: packages/osmo-bsc-latest
+#  osmo-bsc:
+#    image: ensemblepourladifference/osmo-bsc:latest
+#    build:
+#      context: packages/osmo-bsc-latest
+#    network_mode: "host"
+#    restart: unless-stopped
+#  osmo-msc:
+#    image: ensemblepourladifference/osmo-msc:latest
+#    build:
+#      context: packages/osmo-msc-latest
+#    network_mode: "host"
+#    restart: unless-stopped
+#  osmo-mgw:
+#    image: ensemblepourladifference/osmo-mgw:latest
+#    build:
+#      context: packages/osmo-mgw-latest
+#    network_mode: "host"
+#    restart: unless-stopped
+#  osmo-hlr:
+#    image: ensemblepourladifference/osmo-hlr:latest
+#    build:
+#      context: packages/osmo-hlr-latest
+#    network_mode: "host"
+#    restart: unless-stopped
+#  osmo-stp:
+#    image: ensemblepourladifference/osmo-stp:latest
+#    build:
+#      context: packages/osmo-stp-latest
+#    network_mode: "host"
+#    restart: unless-stopped
+  osmo-nitb:
+    image: ensemblepourladifference/osmo-nitb:latest
     network_mode: "host"
     restart: unless-stopped
-  osmo-msc:
-    image: ensemblepourladifference/osmo-msc:latest
-    build:
-      context: packages/osmo-msc-latest
+    volumes:
+            - data:/data
+            - config:/etc/osmocom
+    restart: always
     network_mode: "host"
-    restart: unless-stopped
-  osmo-mgw:
-    image: ensemblepourladifference/osmo-mgw:latest
-    build:
-      context: packages/osmo-mgw-latest
-    network_mode: "host"
-    restart: unless-stopped
-  osmo-hlr:
-    image: ensemblepourladifference/osmo-hlr:latest
-    build:
-      context: packages/osmo-hlr-latest
-    network_mode: "host"
-    restart: unless-stopped
-  osmo-stp:
-    image: ensemblepourladifference/osmo-stp:latest
-    build:
-      context: packages/osmo-stp-latest
-    network_mode: "host"
-    restart: unless-stopped
+volumes:
+  sockets:
+  config:
+    driver_opts:
+      type: none
+      device: /var/opt/config/
+      o: bind
+  data:
+    driver_opts:
+      type: none
+      device: /var/opt/data/
+      o: bind
