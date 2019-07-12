@@ -1,0 +1,28 @@
+var modules =
+[
+    [ "VTY Command", "group__command.html", "group__command" ],
+    [ "Telnet Interface", "group__telnet__interface.html", "group__telnet__interface" ],
+    [ "VTY (Virtual TTY) interface", "group__vty.html", "group__vty" ],
+    [ "Rate counters", "group__rate__ctr.html", "group__rate__ctr" ],
+    [ "Bit compression", "../../core/html/group__bitcomp.html", "group__bitcomp" ],
+    [ "soft, unpacked and packed bits", "../../core/html/group__bits.html", "group__bits" ],
+    [ "Bit vectors", "../../core/html/group__bitvec.html", "group__bitvec" ],
+    [ "Convolutional encoding and decoding routines", "../../core/html/group__conv.html", "group__conv" ],
+    [ "Osmocom generic CRC routines", "../../core/html/group__crcgen.html", "group__crcgen" ],
+    [ "General-purpose utility functions", "../../core/html/group__utils.html", "group__utils" ],
+    [ "Finite State Machine abstraction", "../../core/html/group__fsm.html", "group__fsm" ],
+    [ "GSMTAP", "../../core/html/group__gsmtap.html", "group__gsmtap" ],
+    [ "Simple doubly linked list implementation", "../../core/html/group__linuxlist.html", "group__linuxlist" ],
+    [ "Osmocom logging framework", "../../core/html/group__logging.html", "group__logging" ],
+    [ "Osmocom ringbuffer-backed logging", "../../core/html/group__loggingrb.html", "group__loggingrb" ],
+    [ "Message buffers", "../../core/html/group__msgb.html", "group__msgb" ],
+    [ "Osmocom primitives", "../../core/html/group__prim.html", "group__prim" ],
+    [ "Select loop abstraction", "../../core/html/group__select.html", null ],
+    [ "Utility functions to deal with serial ports", "../../core/html/group__serial.html", "group__serial" ],
+    [ "Intra-application signals", "../../core/html/group__signal.html", "group__signal" ],
+    [ "Socket convenience functions", "../../core/html/group__socket.html", null ],
+    [ "Statistics value item", "../../core/html/group__osmo__stat__item.html", "group__osmo__stat__item" ],
+    [ "Osmocom ringbuffers for log strings", "../../core/html/group__osmo__strrb.html", "group__osmo__strrb" ],
+    [ "Osmocom timers", "../../core/html/group__timer.html", "group__timer" ],
+    [ "Osmocom msgb write queues", "../../core/html/group__write__queue.html", "group__write__queue" ]
+];

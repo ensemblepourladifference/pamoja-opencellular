@@ -1,0 +1,11 @@
+prefix=/usr/local/osmo_built
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: OpenGGSN STP Library
+Description: C Utility Library
+Version: 0.93
+Libs: -L${libdir} -lgtp
+Cflags: -I${includedir}/
+

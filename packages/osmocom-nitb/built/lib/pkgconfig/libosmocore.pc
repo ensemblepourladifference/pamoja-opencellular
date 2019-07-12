@@ -1,0 +1,11 @@
+prefix=/usr/local/osmo_built
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Osmocom Core Library
+Description: C Utility Library
+Version: 0.9.6.97-437e
+Libs: -L${libdir} -ltalloc   -losmocore
+Cflags: -I${includedir}/  
+

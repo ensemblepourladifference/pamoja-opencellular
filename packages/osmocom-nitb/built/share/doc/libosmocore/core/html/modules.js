@@ -1,0 +1,25 @@
+var modules =
+[
+    [ "Bit compression", "group__bitcomp.html", "group__bitcomp" ],
+    [ "soft, unpacked and packed bits", "group__bits.html", "group__bits" ],
+    [ "Bit vectors", "group__bitvec.html", "group__bitvec" ],
+    [ "Convolutional encoding and decoding routines", "group__conv.html", "group__conv" ],
+    [ "Osmocom generic CRC routines", "group__crcgen.html", "group__crcgen" ],
+    [ "General-purpose utility functions", "group__utils.html", "group__utils" ],
+    [ "Finite State Machine abstraction", "group__fsm.html", "group__fsm" ],
+    [ "GSMTAP", "group__gsmtap.html", "group__gsmtap" ],
+    [ "Simple doubly linked list implementation", "group__linuxlist.html", "group__linuxlist" ],
+    [ "Osmocom logging framework", "group__logging.html", "group__logging" ],
+    [ "Osmocom ringbuffer-backed logging", "group__loggingrb.html", "group__loggingrb" ],
+    [ "Message buffers", "group__msgb.html", "group__msgb" ],
+    [ "Osmocom primitives", "group__prim.html", "group__prim" ],
+    [ "Rate counters", "group__rate__ctr.html", "group__rate__ctr" ],
+    [ "Select loop abstraction", "group__select.html", "group__select" ],
+    [ "Utility functions to deal with serial ports", "group__serial.html", "group__serial" ],
+    [ "Intra-application signals", "group__signal.html", "group__signal" ],
+    [ "Socket convenience functions", "group__socket.html", "group__socket" ],
+    [ "Statistics value item", "group__osmo__stat__item.html", "group__osmo__stat__item" ],
+    [ "Osmocom ringbuffers for log strings", "group__osmo__strrb.html", "group__osmo__strrb" ],
+    [ "Osmocom timers", "group__timer.html", "group__timer" ],
+    [ "Osmocom msgb write queues", "group__write__queue.html", "group__write__queue" ]
+];

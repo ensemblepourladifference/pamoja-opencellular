@@ -1,0 +1,11 @@
+prefix=/usr/local/osmo_built
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: A-bis Core Library
+Description: C Utility Library
+Version: 0.3.2.58-2547
+Libs: -L${libdir} -losmoabis
+Cflags: -I${includedir}/
+

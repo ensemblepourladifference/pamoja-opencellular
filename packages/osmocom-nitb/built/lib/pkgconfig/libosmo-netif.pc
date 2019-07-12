@@ -1,0 +1,10 @@
+prefix=/usr/local/osmo_built
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Osmocom network interface library
+Description: C Utility Library
+Version: 0.0.6.37-5fd9
+Libs: -L${libdir} -losmonetif
+Cflags: -I${includedir}/

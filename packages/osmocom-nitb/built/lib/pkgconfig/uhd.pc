@@ -1,0 +1,15 @@
+prefix=/usr/local/osmo_built
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: UHD
+Description: Ettus Research - USRP Hardware Driver
+URL: https://github.com/EttusResearch/uhd
+Version: 3.11.0.HEAD-88-g180d5f3a
+Requires:
+Requires.private: 
+Conflicts:
+Cflags: -I${includedir} -I/usr/include
+Libs: -L${libdir} -luhd -lboost_system
+Libs.private: -L/usr/lib/x86_64-linux-gnu

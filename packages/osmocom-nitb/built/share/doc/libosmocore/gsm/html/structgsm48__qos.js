@@ -1,0 +1,28 @@
+var structgsm48__qos =
+[
+    [ "delay_class", "structgsm48__qos.html#aa6a4f495f8c83f937ed2a7b17ae7eff2", null ],
+    [ "deliv_err_sdu", "structgsm48__qos.html#a4daf537c3d1df74aa4429caa5424bddf", null ],
+    [ "deliv_order", "structgsm48__qos.html#a17fc413d42de7254cf8b60aaa0324083", null ],
+    [ "guar_bitrate_down", "structgsm48__qos.html#a4e27ddd577978857958419e5dbc3fa58", null ],
+    [ "guar_bitrate_down_ext", "structgsm48__qos.html#a71b547044e64c5af736d92b0814477cf", null ],
+    [ "guar_bitrate_up", "structgsm48__qos.html#a9f8ca2934ef5edbcd986828cd36a390c", null ],
+    [ "handling_prio", "structgsm48__qos.html#a5fccb767b211a9073699007883682535", null ],
+    [ "max_bitrate_down", "structgsm48__qos.html#aaed41e990ab744c865790d1fd3bceb94", null ],
+    [ "max_bitrate_down_ext", "structgsm48__qos.html#a52fd5f36bab2e6a743e65e6327a345f1", null ],
+    [ "max_bitrate_up", "structgsm48__qos.html#a055b43bb6582d2797d4000e584334a60", null ],
+    [ "max_sdu_size", "structgsm48__qos.html#a5dc4b870b743612e6e8882e294e6f277", null ],
+    [ "mean_tput", "structgsm48__qos.html#a4a61553774fb579c2ce17fa9ee366356", null ],
+    [ "peak_tput", "structgsm48__qos.html#a919b4881dca12b28d9e888de10d48943", null ],
+    [ "preced_class", "structgsm48__qos.html#a742786b299bb5189ac68a64899523b3e", null ],
+    [ "reliab_class", "structgsm48__qos.html#a5a68609f624ee59a4f61af41c2e77440", null ],
+    [ "resid_ber", "structgsm48__qos.html#a1c8860e6365bd24a1c81338e777ee3bc", null ],
+    [ "sdu_err_ratio", "structgsm48__qos.html#a9416c8325faae537df4ddaa309084f6c", null ],
+    [ "sig_ind", "structgsm48__qos.html#a8cc92bbf1b7a11e81e6bb832bd60ba92", null ],
+    [ "spare", "structgsm48__qos.html#a5fbc32b3b690c88298254084dbe58e0d", null ],
+    [ "spare2", "structgsm48__qos.html#add09d739def081e7286fa928cf3cdb38", null ],
+    [ "spare3", "structgsm48__qos.html#a657bd2a9b9a5ac912b7637fd08db39da", null ],
+    [ "spare5", "structgsm48__qos.html#a8945c0609c2d89f2af427a3e608a42c6", null ],
+    [ "src_stats_desc", "structgsm48__qos.html#a9308e7ebe74f4934c5d2cab82c03198f", null ],
+    [ "traf_class", "structgsm48__qos.html#a3df7dab99b7266e2fccd4ac095a5641b", null ],
+    [ "xfer_delay", "structgsm48__qos.html#a72f077535c504ca76d00c10a7275fd07", null ]
+];
