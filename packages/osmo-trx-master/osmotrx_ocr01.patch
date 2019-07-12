@@ -1,0 +1,87 @@
+From 278171c769b9077e6ff3390ce076315dc4277c31 Mon Sep 17 00:00:00 2001
+From: Omar Ramadan <omar.ramadan93@gmail.com>
+Date: Tue, 20 Nov 2018 19:38:36 -0800
+Subject: [PATCH] OCR01 patches
+
+---
+ Transceiver52M/device/uhd/UHDDevice.cpp | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/Transceiver52M/device/uhd/UHDDevice.cpp b/Transceiver52M/device/uhd/UHDDevice.cpp
+index 3db09a8..dcab216 100644
+--- a/Transceiver52M/device/uhd/UHDDevice.cpp
++++ b/Transceiver52M/device/uhd/UHDDevice.cpp
+@@ -70,6 +70,7 @@ enum uhd_dev_type {
+ 	X3XX,
+ 	UMTRX,
+ 	LIMESDR,
++        OCR01,
+ };
+ 
+ /*
+@@ -134,6 +135,8 @@ static const std::map<dev_key, dev_desc> dev_param_map {
+ 	{ std::make_tuple(UMTRX, 4, 4), { 2, 0.0,  GSMRATE, 5.1503e-5,  "UmTRX 4 SPS"        } },
+ 	{ std::make_tuple(LIMESDR, 4, 4), { 1, GSMRATE*32, GSMRATE, 8.9e-5, "LimeSDR 4 SPS"  } },
+ 	{ std::make_tuple(B2XX_MCBTS, 4, 4), { 1, 51.2e6, MCBTS_SPACING*4, B2XX_TIMING_MCBTS, "B200/B210 4 SPS Multi-ARFCN" } },
++	{ std::make_tuple(OCR01, 4, 1), { 2, 26e6, GSMRATE, B2XX_TIMING_4SPS, "OCR01 4/1 Tx/Rx SPS" } },
++	{ std::make_tuple(OCR01, 4, 4), { 2, 26e6, GSMRATE, B2XX_TIMING_4_4SPS, "OCR01 4 SPS" } },
+ };
+ 
+ /*
+@@ -542,6 +545,7 @@ bool uhd_device::parse_dev_type()
+ 		{ "USRP2",    { USRP2,   TX_WINDOW_FIXED } },
+ 		{ "UmTRX",    { UMTRX,   TX_WINDOW_FIXED } },
+ 		{ "LimeSDR",  { LIMESDR, TX_WINDOW_FIXED } },
++		{ "OCR01",    { OCR01,   TX_WINDOW_FIXED } },
+ 	};
+ 
+ 	// Compare UHD motherboard and device strings */
+@@ -555,6 +559,7 @@ bool uhd_device::parse_dev_type()
+ 		}
+ 		mapIter++;
+ 	}
++        dev_type= OCR01;
+ 
+ 	LOGC(DDEV, ALERT) << "Unsupported device " << devString;
+ 	return false;
+@@ -582,8 +587,11 @@ static bool uhd_e3xx_version_chk()
+ 
+ void uhd_device::set_channels(bool swap)
+ {
++	// Use the first found device
++	LOGC(DDEV, INFO) << "Setting channels for dev_type " << dev_type << " tx " << tx_sps << " rx " << rx_sps;
++
+ 	if (iface == MULTI_ARFCN) {
+-		if (dev_type != B200 && dev_type != B210)
++		if (dev_type != B200 && dev_type != B210 && dev_type != OCR01)
+ 			throw std::invalid_argument("Device does not support MCBTS");
+ 		dev_type = B2XX_MCBTS;
+ 		chans = 1;
+@@ -596,6 +604,7 @@ void uhd_device::set_channels(bool swap)
+ 	switch (dev_type) {
+ 	case B210:
+ 	case E3XX:
++	case OCR01:
+ 		if (chans == 1)
+ 			subdev_string = swap ? "A:B" : "A:A";
+ 		else if (chans == 2)
+@@ -742,6 +751,7 @@ int uhd_device::open(const std::string &args, int ref, bool swap_channels)
+ 	case E1XX:
+ 	case E3XX:
+ 	case LIMESDR:
++        case OCR01:
+ 	default:
+ 		break;
+ 	}
+@@ -1071,7 +1081,7 @@ uhd::tune_request_t uhd_device::select_freq(double freq, size_t chan, bool tx)
+ 			return treq;
+ 
+ 		return uhd::tune_request_t(freq, lo_offset);
+-	} else if ((dev_type != B210) || (chans > 2) || (chan > 1)) {
++	} else if ((dev_type != B210 && dev_type != OCR01) || (chans > 2) || (chan > 1)) {
+ 		LOGC(DDEV, ALERT) << chans << " channels unsupported";
+ 		return treq;
+ 	}
+-- 
+2.14.1
+

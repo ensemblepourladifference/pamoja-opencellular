@@ -1,0 +1,51 @@
+version: '2.3'
+services:
+#  realtime:
+#    image: "${ORG}/osmo-trx-master:latest"
+#    privileged: true
+#    volumes:
+#            - /sys/fs/cgroup:/sys/fs/cgroup
+#    command: ["/bin/sh", "-c", "echo 950000 > /sys/fs/cgroup/cpu/cpu.rt_runtime_us; echo 950000 > /sys/fs/cgroup/cpu/docker/cpu.rt_runtime_us;"]
+  osmo-trx:
+    image: "${ORG}/osmo-trx-master:latest"
+    build:
+      context: packages/osmo-trx-master
+      args:
+         ORG: "${ORG}"
+    volumes:
+            - state:/data
+            - config:/etc/osmocom 
+            - /dev/bus:/dev/bus
+            - /sys/bus:/sys/bus
+    restart: always
+    privileged: true
+    device_cgroup_rules:
+      - 'a *:* rwm'
+    cap_add:
+      - ALL
+      - sys_nice
+    #depends_on:
+    #  - realtime
+    #cpu_rt_runtime: '950000us'
+    #cpu_rt_period: '1000000us'
+    # /usr/local/lib/uhd/utils/b2xx_fx3_utils --init-device --write-vid 0x8888 --write-pid 0x9999
+  osmo-bts:
+    image: "${ORG}/osmo-bts-latest:latest"
+    build:
+      context: packages/osmo-bts-latest
+      args:
+         ORG: "${ORG}"
+    volumes:
+            - config:/data
+    restart: always
+    network_mode: "host"
+volumes:
+  sockets:
+  config:
+    driver_opts:
+      type: none
+      device: /var/opt/config/
+      o: bind
+  state:
+    driver: "local"
+    
